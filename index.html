@@ -213,6 +213,11 @@
             </div>
 
             <div class="field">
+              <label for="zoanForm">Transformacja Zoan</label>
+              <select id="zoanForm"></select>
+            </div>
+
+            <div class="field">
               <label for="fruitLevel">Poziom owocu</label>
               <select id="fruitLevel"></select>
             </div>
@@ -342,18 +347,43 @@
   <script>
     const data = {
       devilFruit: [
+        { name: 'Brak', power: 0, type: 'None' },
+        { name: 'Gomu Gomu no Mi', power: 26, type: 'Paramecia' },
+        { name: 'Mera Mera no Mi', power: 30, type: 'Logia' },
+        { name: 'Yami Yami no Mi', power: 38, type: 'Logia' },
+        { name: 'Gura Gura no Mi', power: 42, type: 'Paramecia' },
+        { name: 'Ope Ope no Mi', power: 36, type: 'Paramecia' },
+        { name: 'Pika Pika no Mi', power: 40, type: 'Logia' },
+        { name: 'Magu Magu no Mi', power: 39, type: 'Logia' },
+        { name: 'Tori Tori no Mi, Model Phoenix', power: 37, type: 'Mythical Zoan' },
+        { name: 'Uo Uo no Mi, Model Seiryu', power: 45, type: 'Mythical Zoan' },
+        { name: 'Hie Hie no Mi', power: 34, type: 'Logia' },
+        { name: 'Zushi Zushi no Mi', power: 35, type: 'Paramecia' },
+        { name: 'Neko Neko no Mi, Model Leopard', power: 29, type: 'Zoan' },
+        { name: 'Ryu Ryu no Mi, Model Allosaurus', power: 31, type: 'Ancient Zoan' },
+        { name: 'Ryu Ryu no Mi, Model Spinosaurus', power: 32, type: 'Ancient Zoan' },
+        { name: 'Tori Tori no Mi, Model Falcon', power: 24, type: 'Zoan' },
+        { name: 'Inu Inu no Mi, Model Okuchi no Makami', power: 41, type: 'Mythical Zoan' },
+        { name: 'Hito Hito no Mi, Model Nika', power: 48, type: 'Mythical Zoan' },
+        { name: 'Hebi Hebi no Mi, Model Yamata no Orochi', power: 34, type: 'Mythical Zoan' },
+        { name: 'Mochi Mochi no Mi', power: 34, type: 'Special Paramecia' },
+        { name: 'Nikyu Nikyu no Mi', power: 33, type: 'Paramecia' },
+        { name: 'Doku Doku no Mi', power: 35, type: 'Paramecia' },
+        { name: 'Soru Soru no Mi', power: 41, type: 'Paramecia' },
+        { name: 'Ito Ito no Mi', power: 30, type: 'Paramecia' },
+        { name: 'Gasu Gasu no Mi', power: 29, type: 'Logia' },
+        { name: 'Mori Mori no Mi', power: 38, type: 'Logia' },
+        { name: 'Riki Riki no Mi', power: 27, type: 'Paramecia' },
+        { name: 'Jiki Jiki no Mi', power: 37, type: 'Paramecia' },
+        { name: 'Bari Bari no Mi', power: 28, type: 'Paramecia' },
+        { name: 'Kage Kage no Mi', power: 31, type: 'Paramecia' }
+      ],
+      zoanForm: [
         { name: 'Brak', power: 0 },
-        { name: 'Gomu Gomu no Mi', power: 26 },
-        { name: 'Mera Mera no Mi', power: 30 },
-        { name: 'Yami Yami no Mi', power: 38 },
-        { name: 'Gura Gura no Mi', power: 42 },
-        { name: 'Ope Ope no Mi', power: 36 },
-        { name: 'Pika Pika no Mi', power: 40 },
-        { name: 'Magu Magu no Mi', power: 39 },
-        { name: 'Tori Tori no Mi, Model Phoenix', power: 37 },
-        { name: 'Uo Uo no Mi, Model Seiryu', power: 45 },
-        { name: 'Hie Hie no Mi', power: 34 },
-        { name: 'Zushi Zushi no Mi', power: 35 }
+        { name: 'Forma bestii', power: 12 },
+        { name: 'Forma hybrydowa', power: 18 },
+        { name: 'Pełna kontrola transformacji', power: 28 },
+        { name: 'Przebudzona transformacja', power: 38 }
       ],
       fruitLevel: [
         { name: 'Basic', power: 0 },
@@ -480,6 +510,7 @@
     const el = id => document.getElementById(id);
     const nameInput = el('name');
     const devilFruitSelect = el('devilFruit');
+    const zoanFormSelect = el('zoanForm');
     const fruitLevelSelect = el('fruitLevel');
     const raceSelect = el('race');
     const originSelect = el('origin');
@@ -532,6 +563,10 @@
     function randomizeStats() {
       devilFruitSelect.value = randomItem(data.devilFruit).name;
       fruitLevelSelect.value = randomItem(data.fruitLevel).name;
+      const selectedFruit = data.devilFruit.find(f => f.name === devilFruitSelect.value);
+      zoanFormSelect.value = selectedFruit && selectedFruit.type.includes('Zoan')
+        ? randomItem(data.zoanForm.slice(1)).name
+        : 'Brak';
       raceSelect.value = randomItem(data.race).name;
       originSelect.value = randomItem(data.origin).name;
       jobSelect.value = randomItem(data.job).name;
@@ -555,7 +590,7 @@
 
     function resetForm() {
       nameInput.value = '';
-      [devilFruitSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect].forEach(s => s.selectedIndex = 0);
+      [devilFruitSelect, zoanFormSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect].forEach(s => s.selectedIndex = 0);
       bountyInput.value = 0;
       loreText.textContent = 'Tutaj pojawi się historia twojej postaci.';
       battleResult.textContent = 'Wybierz walkę, aby zobaczyć wynik starcia.';
@@ -602,6 +637,8 @@
     function calculateScore() {
       const fruit = devilFruitSelect.value;
       const fruitLevel = fruitLevelSelect.value;
+      const zoanForm = zoanFormSelect.value;
+      const zoanForm = zoanFormSelect.value;
       const race = raceSelect.value;
       const origin = originSelect.value;
       const job = jobSelect.value;
@@ -617,6 +654,7 @@
 
       let score = 0;
       score += getPower(data.devilFruit, fruit);
+      score += getPower(data.zoanForm, zoanFormSelect.value);
       score += getPower(data.fruitLevel, fruitLevel);
       score += getPower(data.race, race);
       score += getPower(data.origin, origin);
@@ -631,7 +669,14 @@
       score += getPower(data.ultimate, ultimate);
       score += Math.min(70, Math.floor(bounty / 100000000));
 
+      const selectedFruit = data.devilFruit.find(f => f.name === fruit);
+      const isZoan = selectedFruit && selectedFruit.type.includes('Zoan');
+
       if (fruit !== 'Brak' && style === 'Advanced Haki Combat') score += 10;
+      if (!isZoan && zoanForm !== 'Brak') score -= 20;
+      if (isZoan && zoanForm === 'Brak') score -= 10;
+      if (isZoan && zoanForm === 'Pełna kontrola transformacji') score += 10;
+      if (isZoan && zoanForm === 'Przebudzona transformacja') score += 18;
       if (fruitLevel === 'Awakened' && fruit !== 'Brak') score += 16;
       if (race === 'Fish-Man' && style === 'Fish-Man Karate') score += 12;
       if ((weapon === 'Sword' || weapon === 'Dual Swords' || weapon === 'Katana') && style === 'Swordsmanship') score += 10;
@@ -679,6 +724,8 @@
       summary.innerHTML = `
         <div class="summary-item"><span>Nazwa:</span> ${name}</div>
         <div class="summary-item"><span>Devil Fruit:</span> ${fruit}</div>
+        <div class="summary-item"><span>Typ owocu:</span> ${(data.devilFruit.find(f => f.name === fruit) || {type:'-' }).type}</div>
+        <div class="summary-item"><span>Transformacja Zoan:</span> ${zoanForm}</div>
         <div class="summary-item"><span>Poziom owocu:</span> ${fruitLevel}</div>
         <div class="summary-item"><span>Rasa:</span> ${race}</div>
         <div class="summary-item"><span>Pochodzenie:</span> ${origin}</div>
@@ -741,7 +788,12 @@
       const ultimate = ultimateSelect.value;
       const tier = getTier(calculateScore());
 
-      loreText.textContent = `${name} pochodzi z miejsca ${origin} i od dziecka był kimś, kogo świat nie potrafił zrozumieć. Jako ${race.toLowerCase()} obrał drogę ${job.toLowerCase()} i związał swój los z frakcją ${faction}. Jego znak rozpoznawczy to ${weapon.toLowerCase()}, styl ${style.toLowerCase()} oraz moc ${fruit} na poziomie ${fruitLevel}. Dzięki ${haki} i technice ${ultimate}, ${name} stał się kimś więcej niż zwykłym ${crewRole.toLowerCase()}. Pływając na statku typu ${ship}, zostawia po sobie zniszczenie, legendy i strach. Plotki mówią, że osiągnął poziom ${tier} i może zmienić układ sił na całym świecie.`;
+      const fruitInfo = data.devilFruit.find(f => f.name === fruit);
+      const zoanLine = fruitInfo && fruitInfo.type.includes('Zoan')
+        ? ` Opanował też ${zoanForm.toLowerCase()}, dzięki czemu jego forma bestii budzi postrach.`
+        : '';
+
+      loreText.textContent = `${name} pochodzi z miejsca ${origin} i od dziecka był kimś, kogo świat nie potrafił zrozumieć. Jako ${race.toLowerCase()} obrał drogę ${job.toLowerCase()} i związał swój los z frakcją ${faction}. Jego znak rozpoznawczy to ${weapon.toLowerCase()}, styl ${style.toLowerCase()} oraz moc ${fruit} na poziomie ${fruitLevel}. Dzięki ${haki} i technice ${ultimate}, ${name} stał się kimś więcej niż zwykłym ${crewRole.toLowerCase()}. Pływając na statku typu ${ship}, zostawia po sobie zniszczenie, legendy i strach. Plotki mówią, że osiągnął poziom ${tier} i może zmienić układ sił na całym świecie.${zoanLine}`;
     }
 
     function fightEnemy(enemy) {
@@ -781,6 +833,7 @@
       const character = {
         name: nameInput.value.trim() || 'Bez nazwy',
         devilFruit: devilFruitSelect.value,
+        zoanForm: zoanFormSelect.value,
         fruitLevel: fruitLevelSelect.value,
         race: raceSelect.value,
         origin: originSelect.value,
@@ -811,6 +864,7 @@
         const c = JSON.parse(raw);
         nameInput.value = c.name || '';
         devilFruitSelect.value = c.devilFruit || data.devilFruit[0].name;
+        zoanFormSelect.value = c.zoanForm || data.zoanForm[0].name;
         fruitLevelSelect.value = c.fruitLevel || data.fruitLevel[0].name;
         raceSelect.value = c.race || data.race[0].name;
         originSelect.value = c.origin || data.origin[0].name;
@@ -834,6 +888,7 @@
 
     function setup() {
       fillSelect(devilFruitSelect, data.devilFruit);
+      fillSelect(zoanFormSelect, data.zoanForm);
       fillSelect(fruitLevelSelect, data.fruitLevel);
       fillSelect(raceSelect, data.race);
       fillSelect(originSelect, data.origin);
@@ -851,7 +906,7 @@
       randomizeStats();
       generateLore();
 
-      [nameInput, devilFruitSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect, bountyInput]
+      [nameInput, devilFruitSelect, zoanFormSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect, bountyInput]
         .forEach(elm => elm.addEventListener('input', updateCharacter));
 
       updateCharacter();
