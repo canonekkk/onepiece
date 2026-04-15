@@ -416,4 +416,448 @@
         { name: 'Black Leg Style', power: 22 },
         { name: 'Swordsmanship', power: 20 },
         { name: 'Sniper Tactics', power: 15 },
-        { name: 'El
+        { name: 'Electro', power: 21 },
+        { name: 'Brawling', power: 16 },
+        { name: 'Advanced Haki Combat', power: 34 }
+      ],
+      haki: [
+        { name: 'Brak', power: 0 },
+        { name: 'Observation Haki', power: 14 },
+        { name: 'Armament Haki', power: 18 },
+        { name: 'Conqueror\'s Haki', power: 28 },
+        { name: 'Advanced Observation', power: 24 },
+        { name: 'Advanced Armament', power: 26 },
+        { name: 'Advanced Conqueror\'s', power: 38 },
+        { name: 'ALL', power: 50 }
+      ],
+      crewRole: [
+        { name: 'Captain', power: 18 },
+        { name: 'Swordsman', power: 15 },
+        { name: 'Sniper', power: 11 },
+        { name: 'Navigator', power: 8 },
+        { name: 'Doctor', power: 9 },
+        { name: 'Cook', power: 12 },
+        { name: 'Shipwright', power: 10 },
+        { name: 'Assassin', power: 16 }
+      ],
+      crewSize: [
+        { name: 'Solo', power: 6 },
+        { name: 'Mała załoga', power: 12 },
+        { name: 'Średnia załoga', power: 18 },
+        { name: 'Wielka flota', power: 28 }
+      ],
+      ship: [
+        { name: 'Mała łódź', power: 4 },
+        { name: 'Karawela', power: 10 },
+        { name: 'Wielki galeon', power: 18 },
+        { name: 'Pancerny okręt', power: 24 },
+        { name: 'Legendarny statek', power: 32 }
+      ],
+      ultimate: [
+        { name: 'Brak', power: 0 },
+        { name: 'Heaven Splitter', power: 24 },
+        { name: 'Inferno Tempest', power: 28 },
+        { name: 'Divine Departure', power: 34 },
+        { name: 'Black Void Collapse', power: 38 },
+        { name: 'Solar Judgment', power: 42 }
+      ]
+    };
+
+    const firstNames = ['Drax', 'Ryu', 'Ace', 'Nova', 'Kai', 'Luna', 'Tora', 'Zane', 'Mika', 'Ren', 'Sora', 'Drake', 'Storm'];
+    const middleMarks = ['D.', 'of', 'the', 'Iron', 'Red', 'Storm', 'Shadow', 'Flame'];
+    const lastNames = ['Tempest', 'Vortex', 'Blade', 'Wave', 'Hunter', 'Raven', 'Seastar', 'Wolf', 'Thunder', 'Canonek'];
+    const enemies = [
+      { name: 'Kaido', power: 320 },
+      { name: 'Big Mom', power: 305 },
+      { name: 'Shanks', power: 315 },
+      { name: 'Blackbeard', power: 325 },
+      { name: 'Akainu', power: 300 },
+      { name: 'Mihawk', power: 298 },
+      { name: 'Garp Prime Echo', power: 340 },
+      { name: 'Imu Shadow Vessel', power: 380 }
+    ];
+
+    const el = id => document.getElementById(id);
+    const nameInput = el('name');
+    const devilFruitSelect = el('devilFruit');
+    const fruitLevelSelect = el('fruitLevel');
+    const raceSelect = el('race');
+    const originSelect = el('origin');
+    const jobSelect = el('job');
+    const factionSelect = el('faction');
+    const weaponSelect = el('weapon');
+    const fightingStyleSelect = el('fightingStyle');
+    const hakiSelect = el('haki');
+    const crewRoleSelect = el('crewRole');
+    const crewSizeSelect = el('crewSize');
+    const shipSelect = el('ship');
+    const ultimateSelect = el('ultimate');
+    const bountyInput = el('bounty');
+    const powerValue = el('powerValue');
+    const powerRank = el('powerRank');
+    const powerBar = el('powerBar');
+    const summary = el('summary');
+    const extraInfo = el('extraInfo');
+    const loreText = el('loreText');
+    const battleResult = el('battleResult');
+    const posterName = el('posterName');
+    const posterEpithet = el('posterEpithet');
+    const posterFaction = el('posterFaction');
+    const posterTier = el('posterTier');
+    const posterBounty = el('posterBounty');
+    const threatBadges = el('threatBadges');
+
+    function fillSelect(select, items) {
+      select.innerHTML = '';
+      items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        option.textContent = item.name;
+        select.appendChild(option);
+      });
+    }
+
+    function randomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function generateName() {
+      const first = randomItem(firstNames);
+      const middle = randomItem(middleMarks);
+      const last = randomItem(lastNames);
+      nameInput.value = `${first} ${middle} ${last}`;
+      updateCharacter();
+    }
+
+    function randomizeStats() {
+      devilFruitSelect.value = randomItem(data.devilFruit).name;
+      fruitLevelSelect.value = randomItem(data.fruitLevel).name;
+      raceSelect.value = randomItem(data.race).name;
+      originSelect.value = randomItem(data.origin).name;
+      jobSelect.value = randomItem(data.job).name;
+      factionSelect.value = randomItem(data.faction).name;
+      weaponSelect.value = randomItem(data.weapon).name;
+      fightingStyleSelect.value = randomItem(data.fightingStyle).name;
+      hakiSelect.value = randomItem(data.haki).name;
+      crewRoleSelect.value = randomItem(data.crewRole).name;
+      crewSizeSelect.value = randomItem(data.crewSize).name;
+      shipSelect.value = randomItem(data.ship).name;
+      ultimateSelect.value = randomItem(data.ultimate).name;
+      bountyInput.value = Math.floor((Math.random() * 690 + 10)) * 10000000;
+      updateCharacter();
+    }
+
+    function randomizeAll() {
+      generateName();
+      randomizeStats();
+      generateLore();
+    }
+
+    function resetForm() {
+      nameInput.value = '';
+      [devilFruitSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect].forEach(s => s.selectedIndex = 0);
+      bountyInput.value = 0;
+      loreText.textContent = 'Tutaj pojawi się historia twojej postaci.';
+      battleResult.textContent = 'Wybierz walkę, aby zobaczyć wynik starcia.';
+      updateCharacter();
+    }
+
+    function getPower(collection, name) {
+      const found = collection.find(item => item.name === name);
+      return found ? found.power : 0;
+    }
+
+    function formatBounty(value) {
+      const number = Number(value) || 0;
+      return number.toLocaleString('pl-PL') + ' B';
+    }
+
+    function getTier(score) {
+      if (score < 60) return 'Rookie';
+      if (score < 110) return 'Supernova';
+      if (score < 170) return 'Commander';
+      if (score < 240) return 'Admiral';
+      if (score < 320) return 'Yonko';
+      return 'God Tier';
+    }
+
+    function getRank(score) {
+      if (score < 40) return 'Początkujący';
+      if (score < 70) return 'Silny wojownik';
+      if (score < 100) return 'Elita Grand Line';
+      if (score < 130) return 'Potęga Nowego Świata';
+      if (score < 160) return 'Legenda mórz';
+      if (score < 250) return 'Poziom Yonko';
+      return 'Bóg Mórz';
+    }
+
+    function generateEpithet(name, race, origin, haki) {
+      let tag = randomItem(['Burza', 'Mrok', 'Płomień', 'Widmo', 'Katastrofa', 'Tsunami', 'Bestia', 'Król Cieni']);
+      if (race === 'Demon') tag = 'Piekielny Władca';
+      if (haki === 'ALL') tag = 'Pan Haki';
+      if (origin === 'Piekielna Otchłań') tag = 'Władca Otchłani';
+      return `${name} - ${tag}`;
+    }
+
+    function calculateScore() {
+      const fruit = devilFruitSelect.value;
+      const fruitLevel = fruitLevelSelect.value;
+      const race = raceSelect.value;
+      const origin = originSelect.value;
+      const job = jobSelect.value;
+      const faction = factionSelect.value;
+      const weapon = weaponSelect.value;
+      const style = fightingStyleSelect.value;
+      const haki = hakiSelect.value;
+      const crewRole = crewRoleSelect.value;
+      const crewSize = crewSizeSelect.value;
+      const ship = shipSelect.value;
+      const ultimate = ultimateSelect.value;
+      const bounty = Number(bountyInput.value) || 0;
+
+      let score = 0;
+      score += getPower(data.devilFruit, fruit);
+      score += getPower(data.fruitLevel, fruitLevel);
+      score += getPower(data.race, race);
+      score += getPower(data.origin, origin);
+      score += getPower(data.job, job);
+      score += getPower(data.faction, faction);
+      score += getPower(data.weapon, weapon);
+      score += getPower(data.fightingStyle, style);
+      score += getPower(data.haki, haki);
+      score += getPower(data.crewRole, crewRole);
+      score += getPower(data.crewSize, crewSize);
+      score += getPower(data.ship, ship);
+      score += getPower(data.ultimate, ultimate);
+      score += Math.min(70, Math.floor(bounty / 100000000));
+
+      if (fruit !== 'Brak' && style === 'Advanced Haki Combat') score += 10;
+      if (fruitLevel === 'Awakened' && fruit !== 'Brak') score += 16;
+      if (race === 'Fish-Man' && style === 'Fish-Man Karate') score += 12;
+      if ((weapon === 'Sword' || weapon === 'Dual Swords' || weapon === 'Katana') && style === 'Swordsmanship') score += 10;
+      if (race === 'Lunarian' && fruit !== 'Brak') score += 8;
+      if (job === 'Marine' && style === 'Rokushiki') score += 7;
+      if (haki.includes('Advanced') && fruit !== 'Brak') score += 8;
+      if (haki === 'ALL') score += 15;
+      if (crewRole === 'Captain' && job === 'Pirate') score += 8;
+      if (crewRole === 'Swordsman' && (weapon === 'Sword' || weapon === 'Dual Swords' || weapon === 'Katana')) score += 8;
+      if (crewRole === 'Cook' && style === 'Black Leg Style') score += 7;
+      if (race === 'Demon' && haki === 'ALL') score += 20;
+      if (origin === 'Piekielna Otchłań' && race === 'Demon') score += 15;
+      if (crewSize === 'Wielka flota' && crewRole === 'Captain') score += 12;
+      if (ship === 'Legendarny statek' && crewSize === 'Wielka flota') score += 10;
+      if (ultimate === 'Solar Judgment' && fruit === 'Pika Pika no Mi') score += 14;
+      if (faction === 'Yonko Fleet' && getTier(score) === 'Yonko') score += 8;
+
+      return score;
+    }
+
+    function updateCharacter() {
+      const score = calculateScore();
+      const name = nameInput.value.trim() || 'Bez nazwy';
+      const fruit = devilFruitSelect.value;
+      const fruitLevel = fruitLevelSelect.value;
+      const race = raceSelect.value;
+      const origin = originSelect.value;
+      const job = jobSelect.value;
+      const faction = factionSelect.value;
+      const weapon = weaponSelect.value;
+      const style = fightingStyleSelect.value;
+      const haki = hakiSelect.value;
+      const crewRole = crewRoleSelect.value;
+      const crewSize = crewSizeSelect.value;
+      const ship = shipSelect.value;
+      const ultimate = ultimateSelect.value;
+      const bounty = Number(bountyInput.value) || 0;
+      const tier = getTier(score);
+      const epithet = generateEpithet(name, race, origin, haki);
+
+      powerValue.textContent = score;
+      powerRank.textContent = getRank(score);
+      powerBar.style.width = Math.min(100, (score / 420) * 100) + '%';
+
+      summary.innerHTML = `
+        <div class="summary-item"><span>Nazwa:</span> ${name}</div>
+        <div class="summary-item"><span>Devil Fruit:</span> ${fruit}</div>
+        <div class="summary-item"><span>Poziom owocu:</span> ${fruitLevel}</div>
+        <div class="summary-item"><span>Rasa:</span> ${race}</div>
+        <div class="summary-item"><span>Pochodzenie:</span> ${origin}</div>
+        <div class="summary-item"><span>Praca:</span> ${job}</div>
+        <div class="summary-item"><span>Frakcja:</span> ${faction}</div>
+        <div class="summary-item"><span>Broń:</span> ${weapon}</div>
+        <div class="summary-item"><span>Fighting Style:</span> ${style}</div>
+        <div class="summary-item"><span>Haki:</span> ${haki}</div>
+        <div class="summary-item"><span>Rola:</span> ${crewRole}</div>
+        <div class="summary-item"><span>Wielkość załogi:</span> ${crewSize}</div>
+        <div class="summary-item"><span>Statek:</span> ${ship}</div>
+        <div class="summary-item"><span>Ultimate:</span> ${ultimate}</div>
+        <div class="summary-item"><span>Bounty:</span> ${formatBounty(bounty)}</div>
+      `;
+
+      let title = 'Wschodzący wojownik';
+      if (score >= 320) title = 'Bóstwo Ery Piratów';
+      else if (score >= 250) title = 'Cień Cesarza Mórz';
+      else if (score >= 170) title = 'Katastrofa Nowego Świata';
+      else if (score >= 110) title = 'Pogromca Grand Line';
+      else if (score >= 70) title = 'Postrach mórz';
+
+      const threat = score >= 320 ? 'Globalne zagrożenie' : score >= 250 ? 'Zagrożenie dla Yonko' : score >= 170 ? 'Zagrożenie dla Admiralicji' : 'Groźny wojownik';
+      const world = score >= 320 ? 'Światowy reset sił' : score >= 250 ? 'Trzęsienie Nowego Świata' : score >= 170 ? 'Chaos na Grand Line' : 'Rosnąca legenda';
+
+      extraInfo.innerHTML = `
+        <div class="summary-item"><span>Tytuł legendy:</span> ${title}</div>
+        <div class="summary-item"><span>Tier:</span> <span class="tier-big">${tier}</span></div>
+        <div class="summary-item"><span>Przydomek:</span> ${epithet}</div>
+        <div class="summary-item"><span>Poziom zagrożenia:</span> ${threat}</div>
+        <div class="summary-item"><span>Wpływ na świat:</span> ${world}</div>
+      `;
+
+      threatBadges.innerHTML = `
+        <div class="badge">${tier}</div>
+        <div class="badge">${threat}</div>
+        <div class="badge">${world}</div>
+      `;
+
+      posterName.textContent = name;
+      posterEpithet.textContent = epithet;
+      posterFaction.textContent = faction;
+      posterTier.textContent = tier;
+      posterBounty.textContent = formatBounty(bounty);
+    }
+
+    function generateLore() {
+      const name = nameInput.value.trim() || 'Bez nazwy';
+      const fruit = devilFruitSelect.value;
+      const fruitLevel = fruitLevelSelect.value;
+      const race = raceSelect.value;
+      const origin = originSelect.value;
+      const job = jobSelect.value;
+      const faction = factionSelect.value;
+      const weapon = weaponSelect.value;
+      const style = fightingStyleSelect.value;
+      const haki = hakiSelect.value;
+      const crewRole = crewRoleSelect.value;
+      const ship = shipSelect.value;
+      const ultimate = ultimateSelect.value;
+      const tier = getTier(calculateScore());
+
+      loreText.textContent = `${name} pochodzi z miejsca ${origin} i od dziecka był kimś, kogo świat nie potrafił zrozumieć. Jako ${race.toLowerCase()} obrał drogę ${job.toLowerCase()} i związał swój los z frakcją ${faction}. Jego znak rozpoznawczy to ${weapon.toLowerCase()}, styl ${style.toLowerCase()} oraz moc ${fruit} na poziomie ${fruitLevel}. Dzięki ${haki} i technice ${ultimate}, ${name} stał się kimś więcej niż zwykłym ${crewRole.toLowerCase()}. Pływając na statku typu ${ship}, zostawia po sobie zniszczenie, legendy i strach. Plotki mówią, że osiągnął poziom ${tier} i może zmienić układ sił na całym świecie.`;
+    }
+
+    function fightEnemy(enemy) {
+      const playerScore = calculateScore();
+      const diff = playerScore - enemy.power;
+      let result = '';
+
+      if (diff >= 70) result = `Totalna masakra. Pokonałeś ${enemy.name} bez większego wysiłku.`;
+      else if (diff >= 25) result = `Pewne zwycięstwo. ${enemy.name} nie wytrzymał twojej presji.`;
+      else if (diff >= 0) result = `Bardzo ciężka walka, ale ostatecznie pokonałeś ${enemy.name}.`;
+      else if (diff >= -20) result = `${enemy.name} ledwo cię pokonał. Rewanż jest blisko.`;
+      else result = `${enemy.name} był za mocny. Potrzebujesz jeszcze większej potęgi.`;
+
+      battleResult.innerHTML = `<strong>Wróg:</strong> ${enemy.name}<br><strong>Siła wroga:</strong> ${enemy.power}<br><strong>Twoja siła:</strong> ${playerScore}<br><br>${result}`;
+    }
+
+    function fightRandomEnemy() {
+      fightEnemy(randomItem(enemies));
+    }
+
+    function fightYonko() {
+      const yonko = enemies.filter(e => ['Kaido','Big Mom','Shanks','Blackbeard'].includes(e.name));
+      const playerScore = calculateScore();
+      const wins = yonko.filter(y => playerScore >= y.power).length;
+      let text = `<strong>Twoja siła:</strong> ${playerScore}<br><br>`;
+      yonko.forEach(y => {
+        text += `${playerScore >= y.power ? '✅' : '❌'} ${y.name} (${y.power})<br>`;
+      });
+      text += `<br><strong>Pokonani Yonko:</strong> ${wins}/4`;
+      if (wins === 4) text += '<br><br>Jesteś nowym absolutnym władcą mórz.';
+      else if (wins >= 2) text += '<br><br>Masz psychę i moc na najwyższym poziomie.';
+      else text += '<br><br>Jeszcze trochę i wejdziesz na sam szczyt.';
+      battleResult.innerHTML = text;
+    }
+
+    function saveCharacter() {
+      const character = {
+        name: nameInput.value.trim() || 'Bez nazwy',
+        devilFruit: devilFruitSelect.value,
+        fruitLevel: fruitLevelSelect.value,
+        race: raceSelect.value,
+        origin: originSelect.value,
+        job: jobSelect.value,
+        faction: factionSelect.value,
+        weapon: weaponSelect.value,
+        fightingStyle: fightingStyleSelect.value,
+        haki: hakiSelect.value,
+        crewRole: crewRoleSelect.value,
+        crewSize: crewSizeSelect.value,
+        ship: shipSelect.value,
+        ultimate: ultimateSelect.value,
+        bounty: Number(bountyInput.value) || 0,
+        lore: loreText.textContent,
+        savedAt: new Date().toLocaleString('pl-PL')
+      };
+      localStorage.setItem('onePieceCharacterUltra', JSON.stringify(character));
+      alert('Postać została zapisana!');
+    }
+
+    function loadCharacter() {
+      const raw = localStorage.getItem('onePieceCharacterUltra');
+      if (!raw) {
+        alert('Nie znaleziono zapisu postaci.');
+        return;
+      }
+      try {
+        const c = JSON.parse(raw);
+        nameInput.value = c.name || '';
+        devilFruitSelect.value = c.devilFruit || data.devilFruit[0].name;
+        fruitLevelSelect.value = c.fruitLevel || data.fruitLevel[0].name;
+        raceSelect.value = c.race || data.race[0].name;
+        originSelect.value = c.origin || data.origin[0].name;
+        jobSelect.value = c.job || data.job[0].name;
+        factionSelect.value = c.faction || data.faction[0].name;
+        weaponSelect.value = c.weapon || data.weapon[0].name;
+        fightingStyleSelect.value = c.fightingStyle || data.fightingStyle[0].name;
+        hakiSelect.value = c.haki || data.haki[0].name;
+        crewRoleSelect.value = c.crewRole || data.crewRole[0].name;
+        crewSizeSelect.value = c.crewSize || data.crewSize[0].name;
+        shipSelect.value = c.ship || data.ship[0].name;
+        ultimateSelect.value = c.ultimate || data.ultimate[0].name;
+        bountyInput.value = c.bounty || 0;
+        loreText.textContent = c.lore || 'Tutaj pojawi się historia twojej postaci.';
+        updateCharacter();
+        alert('Wczytano postać!');
+      } catch (error) {
+        alert('Nie udało się wczytać zapisu.');
+      }
+    }
+
+    function setup() {
+      fillSelect(devilFruitSelect, data.devilFruit);
+      fillSelect(fruitLevelSelect, data.fruitLevel);
+      fillSelect(raceSelect, data.race);
+      fillSelect(originSelect, data.origin);
+      fillSelect(jobSelect, data.job);
+      fillSelect(factionSelect, data.faction);
+      fillSelect(weaponSelect, data.weapon);
+      fillSelect(fightingStyleSelect, data.fightingStyle);
+      fillSelect(hakiSelect, data.haki);
+      fillSelect(crewRoleSelect, data.crewRole);
+      fillSelect(crewSizeSelect, data.crewSize);
+      fillSelect(shipSelect, data.ship);
+      fillSelect(ultimateSelect, data.ultimate);
+
+      generateName();
+      randomizeStats();
+      generateLore();
+
+      [nameInput, devilFruitSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect, bountyInput]
+        .forEach(elm => elm.addEventListener('input', updateCharacter));
+
+      updateCharacter();
+    }
+
+    setup();
+  </script>
+</body>
+</html>
