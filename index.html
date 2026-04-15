@@ -552,6 +552,25 @@
       return array[Math.floor(Math.random() * array.length)];
     }
 
+    function getSelectedFruit() {
+      return data.devilFruit.find(f => f.name === devilFruitSelect.value) || data.devilFruit[0];
+    }
+
+    function isZoanFruit(fruitObj) {
+      return fruitObj.type.includes('Zoan');
+    }
+
+    function handleZoanAvailability() {
+      const fruit = getSelectedFruit();
+      const zoan = isZoanFruit(fruit);
+      zoanFormSelect.disabled = !zoan;
+      if (!zoan) {
+        zoanFormSelect.value = 'Brak';
+      } else if (zoanFormSelect.value === 'Brak') {
+        zoanFormSelect.value = 'Forma bestii';
+      }
+    }
+
     function generateName() {
       const first = randomItem(firstNames);
       const middle = randomItem(middleMarks);
@@ -562,11 +581,11 @@
 
     function randomizeStats() {
       devilFruitSelect.value = randomItem(data.devilFruit).name;
+      handleZoanAvailability();
+      if (!zoanFormSelect.disabled) {
+        zoanFormSelect.value = randomItem(data.zoanForm.slice(1)).name;
+      }
       fruitLevelSelect.value = randomItem(data.fruitLevel).name;
-      const selectedFruit = data.devilFruit.find(f => f.name === devilFruitSelect.value);
-      zoanFormSelect.value = selectedFruit && selectedFruit.type.includes('Zoan')
-        ? randomItem(data.zoanForm.slice(1)).name
-        : 'Brak';
       raceSelect.value = randomItem(data.race).name;
       originSelect.value = randomItem(data.origin).name;
       jobSelect.value = randomItem(data.job).name;
@@ -594,6 +613,7 @@
       bountyInput.value = 0;
       loreText.textContent = 'Tutaj pojawi się historia twojej postaci.';
       battleResult.textContent = 'Wybierz walkę, aby zobaczyć wynik starcia.';
+      handleZoanAvailability();
       updateCharacter();
     }
 
@@ -638,7 +658,6 @@
       const fruit = devilFruitSelect.value;
       const fruitLevel = fruitLevelSelect.value;
       const zoanForm = zoanFormSelect.value;
-      const zoanForm = zoanFormSelect.value;
       const race = raceSelect.value;
       const origin = originSelect.value;
       const job = jobSelect.value;
@@ -651,10 +670,12 @@
       const ship = shipSelect.value;
       const ultimate = ultimateSelect.value;
       const bounty = Number(bountyInput.value) || 0;
+      const selectedFruit = getSelectedFruit();
+      const zoan = isZoanFruit(selectedFruit);
 
       let score = 0;
       score += getPower(data.devilFruit, fruit);
-      score += getPower(data.zoanForm, zoanFormSelect.value);
+      score += getPower(data.zoanForm, zoanForm);
       score += getPower(data.fruitLevel, fruitLevel);
       score += getPower(data.race, race);
       score += getPower(data.origin, origin);
@@ -669,15 +690,11 @@
       score += getPower(data.ultimate, ultimate);
       score += Math.min(70, Math.floor(bounty / 100000000));
 
-      const selectedFruit = data.devilFruit.find(f => f.name === fruit);
-      const isZoan = selectedFruit && selectedFruit.type.includes('Zoan');
-
       if (fruit !== 'Brak' && style === 'Advanced Haki Combat') score += 10;
-      if (!isZoan && zoanForm !== 'Brak') score -= 20;
-      if (isZoan && zoanForm === 'Brak') score -= 10;
-      if (isZoan && zoanForm === 'Pełna kontrola transformacji') score += 10;
-      if (isZoan && zoanForm === 'Przebudzona transformacja') score += 18;
       if (fruitLevel === 'Awakened' && fruit !== 'Brak') score += 16;
+      if (zoan && zoanForm === 'Brak') score -= 10;
+      if (zoan && zoanForm === 'Pełna kontrola transformacji') score += 10;
+      if (zoan && zoanForm === 'Przebudzona transformacja') score += 18;
       if (race === 'Fish-Man' && style === 'Fish-Man Karate') score += 12;
       if ((weapon === 'Sword' || weapon === 'Dual Swords' || weapon === 'Katana') && style === 'Swordsmanship') score += 10;
       if (race === 'Lunarian' && fruit !== 'Brak') score += 8;
@@ -692,16 +709,18 @@
       if (crewSize === 'Wielka flota' && crewRole === 'Captain') score += 12;
       if (ship === 'Legendarny statek' && crewSize === 'Wielka flota') score += 10;
       if (ultimate === 'Solar Judgment' && fruit === 'Pika Pika no Mi') score += 14;
-      if (faction === 'Yonko Fleet' && getTier(score) === 'Yonko') score += 8;
 
       return score;
     }
 
     function updateCharacter() {
+      handleZoanAvailability();
+
       const score = calculateScore();
       const name = nameInput.value.trim() || 'Bez nazwy';
       const fruit = devilFruitSelect.value;
       const fruitLevel = fruitLevelSelect.value;
+      const zoanForm = zoanFormSelect.value;
       const race = raceSelect.value;
       const origin = originSelect.value;
       const job = jobSelect.value;
@@ -716,6 +735,9 @@
       const bounty = Number(bountyInput.value) || 0;
       const tier = getTier(score);
       const epithet = generateEpithet(name, race, origin, haki);
+      const selectedFruit = getSelectedFruit();
+      const zoan = isZoanFruit(selectedFruit);
+      const zoanStatus = zoan ? `Tak - ${zoanForm}` : 'Nie dotyczy';
 
       powerValue.textContent = score;
       powerRank.textContent = getRank(score);
@@ -724,8 +746,8 @@
       summary.innerHTML = `
         <div class="summary-item"><span>Nazwa:</span> ${name}</div>
         <div class="summary-item"><span>Devil Fruit:</span> ${fruit}</div>
-        <div class="summary-item"><span>Typ owocu:</span> ${(data.devilFruit.find(f => f.name === fruit) || {type:'-' }).type}</div>
-        <div class="summary-item"><span>Transformacja Zoan:</span> ${zoanForm}</div>
+        <div class="summary-item"><span>Typ owocu:</span> ${selectedFruit.type}</div>
+        <div class="summary-item"><span>Transformacja Zoan:</span> ${zoanStatus}</div>
         <div class="summary-item"><span>Poziom owocu:</span> ${fruitLevel}</div>
         <div class="summary-item"><span>Rasa:</span> ${race}</div>
         <div class="summary-item"><span>Pochodzenie:</span> ${origin}</div>
@@ -776,6 +798,7 @@
       const name = nameInput.value.trim() || 'Bez nazwy';
       const fruit = devilFruitSelect.value;
       const fruitLevel = fruitLevelSelect.value;
+      const zoanForm = zoanFormSelect.value;
       const race = raceSelect.value;
       const origin = originSelect.value;
       const job = jobSelect.value;
@@ -787,13 +810,12 @@
       const ship = shipSelect.value;
       const ultimate = ultimateSelect.value;
       const tier = getTier(calculateScore());
-
-      const fruitInfo = data.devilFruit.find(f => f.name === fruit);
-      const zoanLine = fruitInfo && fruitInfo.type.includes('Zoan')
+      const fruitInfo = getSelectedFruit();
+      const zoanLine = isZoanFruit(fruitInfo)
         ? ` Opanował też ${zoanForm.toLowerCase()}, dzięki czemu jego forma bestii budzi postrach.`
         : '';
 
-      loreText.textContent = `${name} pochodzi z miejsca ${origin} i od dziecka był kimś, kogo świat nie potrafił zrozumieć. Jako ${race.toLowerCase()} obrał drogę ${job.toLowerCase()} i związał swój los z frakcją ${faction}. Jego znak rozpoznawczy to ${weapon.toLowerCase()}, styl ${style.toLowerCase()} oraz moc ${fruit} na poziomie ${fruitLevel}. Dzięki ${haki} i technice ${ultimate}, ${name} stał się kimś więcej niż zwykłym ${crewRole.toLowerCase()}. Pływając na statku typu ${ship}, zostawia po sobie zniszczenie, legendy i strach. Plotki mówią, że osiągnął poziom ${tier} i może zmienić układ sił na całym świecie.${zoanLine}`;
+      loreText.textContent = `${name} pochodzi z miejsca ${origin} i od dziecka był kimś, kogo świat nie potrafił zrozumieć. Jako ${race.toLowerCase()} obrał drogę ${job.toLowerCase()} i związał swój los z frakcją ${faction}. Jego znak rozpoznawczy to ${weapon.toLowerCase()}, styl ${style.toLowerCase()} oraz moc ${fruit} na poziomie ${fruitLevel}.${zoanLine} Dzięki ${haki} i technice ${ultimate}, ${name} stał się kimś więcej niż zwykłym ${crewRole.toLowerCase()}. Pływając na statku typu ${ship}, zostawia po sobie zniszczenie, legendy i strach. Plotki mówią, że osiągnął poziom ${tier} i może zmienić układ sił na całym świecie.`;
     }
 
     function fightEnemy(enemy) {
@@ -864,6 +886,7 @@
         const c = JSON.parse(raw);
         nameInput.value = c.name || '';
         devilFruitSelect.value = c.devilFruit || data.devilFruit[0].name;
+        handleZoanAvailability();
         zoanFormSelect.value = c.zoanForm || data.zoanForm[0].name;
         fruitLevelSelect.value = c.fruitLevel || data.fruitLevel[0].name;
         raceSelect.value = c.race || data.race[0].name;
@@ -902,13 +925,18 @@
       fillSelect(shipSelect, data.ship);
       fillSelect(ultimateSelect, data.ultimate);
 
+      devilFruitSelect.addEventListener('change', () => {
+        handleZoanAvailability();
+        updateCharacter();
+      });
+
+      [nameInput, zoanFormSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect, bountyInput]
+        .forEach(elm => elm.addEventListener('input', updateCharacter));
+
       generateName();
       randomizeStats();
       generateLore();
-
-      [nameInput, devilFruitSelect, zoanFormSelect, fruitLevelSelect, raceSelect, originSelect, jobSelect, factionSelect, weaponSelect, fightingStyleSelect, hakiSelect, crewRoleSelect, crewSizeSelect, shipSelect, ultimateSelect, bountyInput]
-        .forEach(elm => elm.addEventListener('input', updateCharacter));
-
+      handleZoanAvailability();
       updateCharacter();
     }
 
