@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Piece - Kreator Postaci Ultra</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #0b1220, #13213a 45%, #1b365d);
+      color: #f4f7fb;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .title { text-align: center; margin-bottom: 24px; }
+    .title h1 {
+      margin: 0;
+      font-size: 2.4rem;
+      color: #ffd166;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+    .title p { margin-top: 8px; color: #d7e3f5; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .left-stack, .right-stack { display: grid; gap: 24px; }
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 18px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .card h2 { margin-top: 0; color: #ffe08a; font-size: 1.35rem; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    label {
+      font-size: .95rem;
+      font-weight: bold;
+      color: #dbeafe;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(9,16,30,0.8);
+      color: white;
+      outline: none;
+      transition: .2s ease;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      border-color: #ffd166;
+      box-shadow: 0 0 0 3px rgba(255,209,102,0.18);
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: .95rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    button:hover { transform: translateY(-2px); opacity: .95; }
+    .primary { background: #ffd166; color: #1a1a1a; }
+    .secondary { background: #4cc9f0; color: #06131b; }
+    .danger { background: #ef476f; color: white; }
+    .dark { background: #8d99ae; color: #101826; }
+    .power-box { text-align: center; margin-bottom: 18px; }
+    .power-number {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #ffd166;
+      margin: 8px 0;
+    }
+    .power-label {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,209,102,0.16);
+      color: #fff3c4;
+      font-weight: bold;
+    }
+    .bar {
+      width: 100%;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
+      margin-top: 14px;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #4cc9f0, #ffd166, #ef476f);
+      transition: width .35s ease;
+    }
+    .summary, .mini-grid { display: grid; gap: 10px; }
+    .summary-item {
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .summary-item span { color: #9ec5ff; font-weight: bold; }
+    .hint {
+      margin-top: 16px;
+      color: #cbd5e1;
+      font-size: .95rem;
+      line-height: 1.5;
+    }
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(76,201,240,.15);
+      border: 1px solid rgba(76,201,240,.25);
+      color: #dff7ff;
+      font-weight: bold;
+      font-size: .9rem;
+    }
+    .poster {
+      background: linear-gradient(180deg, rgba(255,209,102,.12), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,209,102,.2);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .poster h3 {
+      margin: 0 0 12px 0;
+      letter-spacing: 3px;
+      color: #ffe6a7;
+      text-align: center;
+    }
+    .poster-name {
+      font-size: 2rem;
+      text-align: center;
+      font-weight: 900;
+      color: #fff4cf;
+      margin: 8px 0;
+    }
+    .poster-bounty {
+      font-size: 1.4rem;
+      text-align: center;
+      color: #ffd166;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+    .duel-box {
+      background: rgba(239,71,111,.08);
+      border: 1px solid rgba(239,71,111,.16);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 10px;
+    }
+    .tier-big {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffd166;
+    }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">
+      <h1>Kreator Postaci One Piece Ultra</h1>
+      <p>Stwórz własną legendę mórz, losuj build, generuj historię, plakat gończy i symuluj walki.</p>
+    </div>
+
+    <div class="grid">
+      <div class="left-stack">
+        <div class="card">
+          <h2>Tworzenie postaci</h2>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="name">Nazwa postaci</label>
+              <input id="name" type="text" placeholder="Np. Storm D. Canonek" />
+            </div>
+
+            <div class="field">
+              <label for="devilFruit">Devil Fruit</label>
+              <select id="devilFruit"></select>
+            </div>
+
+            <div class="field">
+              <label for="fruitLevel">Poziom owocu</label>
+              <select id="fruitLevel"></select>
+            </div>
+
+            <div class="field">
+              <label for="race">Rasa</label>
+              <select id="race"></select>
+            </div>
+
+            <div class="field">
+              <label for="origin">Pochodzenie</label>
+              <select id="origin"></select>
+            </div>
+
+            <div class="field">
+              <label for="job">Praca</label>
+              <select id="job"></select>
+            </div>
+
+            <div class="field">
+              <label for="faction">Frakcja</label>
+              <select id="faction"></select>
+            </div>
+
+            <div class="field">
+              <label for="weapon">Broń</label>
+              <select id="weapon"></select>
+            </div>
+
+            <div class="field">
+              <label for="fightingStyle">Fighting Style</label>
+              <select id="fightingStyle"></select>
+            </div>
+
+            <div class="field">
+              <label for="haki">Haki</label>
+              <select id="haki"></select>
+            </div>
+
+            <div class="field">
+              <label for="crewRole">Rola w załodze</label>
+              <select id="crewRole"></select>
+            </div>
+
+            <div class="field">
+              <label for="crewSize">Wielkość załogi</label>
+              <select id="crewSize"></select>
+            </div>
+
+            <div class="field">
+              <label for="ship">Statek</label>
+              <select id="ship"></select>
+            </div>
+
+            <div class="field">
+              <label for="ultimate">Ultimate Attack</label>
+              <select id="ultimate"></select>
+            </div>
+
+            <div class="field">
+              <label for="bounty">Bounty</label>
+              <input id="bounty" type="number" min="0" step="1000" placeholder="Np. 150000000" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" onclick="randomizeAll()">🎲 Losuj wszystko</button>
+            <button class="secondary" onclick="generateName()">✍️ Losuj nazwę</button>
+            <button class="secondary" onclick="randomizeStats()">⚡ Losuj cechy</button>
+            <button class="secondary" onclick="saveCharacter()">💾 Zapisz postać</button>
+            <button class="dark" onclick="loadCharacter()">📂 Wczytaj zapis</button>
+            <button class="danger" onclick="resetForm()">🧹 Reset</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Historia postaci</h2>
+          <div class="actions" style="margin-top:0;">
+            <button class="secondary" onclick="generateLore()">📜 Generuj lore</button>
+          </div>
+          <div class="summary" style="margin-top:14px;">
+            <div class="summary-item" id="loreText">Tutaj pojawi się historia twojej postaci.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-stack">
+        <div class="card">
+          <h2>Szacowana siła postaci</h2>
+          <div class="power-box">
+            <div class="power-number" id="powerValue">0</div>
+            <div class="power-label" id="powerRank">Początkujący</div>
+            <div class="bar">
+              <div class="bar-fill" id="powerBar"></div>
+            </div>
+            <div class="badge-row" id="threatBadges"></div>
+          </div>
+
+          <div class="summary" id="summary"></div>
+          <div class="summary" style="margin-top:16px;" id="extraInfo"></div>
+        </div>
+
+        <div class="card">
+          <h2>Wanted Poster</h2>
+          <div class="poster">
+            <h3>WANTED</h3>
+            <div class="poster-name" id="posterName">Bez nazwy</div>
+            <div class="summary-item"><span>Przydomek:</span> <span id="posterEpithet">-</span></div>
+            <div class="summary-item" style="margin-top:10px;"><span>Frakcja:</span> <span id="posterFaction">-</span></div>
+            <div class="summary-item" style="margin-top:10px;"><span>Tier:</span> <span id="posterTier">-</span></div>
+            <div class="poster-bounty" id="posterBounty">0 B</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Symulacja walki</h2>
+          <div class="actions" style="margin-top:0;">
+            <button class="primary" onclick="fightRandomEnemy()">⚔️ Losowy rywal</button>
+            <button class="secondary" onclick="fightYonko()">👑 Pokonaj Yonko</button>
+          </div>
+          <div class="duel-box" id="battleResult">Wybierz walkę, aby zobaczyć wynik starcia.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      devilFruit: [
+        { name: 'Brak', power: 0 },
+        { name: 'Gomu Gomu no Mi', power: 26 },
+        { name: 'Mera Mera no Mi', power: 30 },
+        { name: 'Yami Yami no Mi', power: 38 },
+        { name: 'Gura Gura no Mi', power: 42 },
+        { name: 'Ope Ope no Mi', power: 36 },
+        { name: 'Pika Pika no Mi', power: 40 },
+        { name: 'Magu Magu no Mi', power: 39 },
+        { name: 'Tori Tori no Mi, Model Phoenix', power: 37 },
+        { name: 'Uo Uo no Mi, Model Seiryu', power: 45 },
+        { name: 'Hie Hie no Mi', power: 34 },
+        { name: 'Zushi Zushi no Mi', power: 35 }
+      ],
+      fruitLevel: [
+        { name: 'Basic', power: 0 },
+        { name: 'Mastered', power: 15 },
+        { name: 'Awakened', power: 32 }
+      ],
+      race: [
+        { name: 'Human', power: 8 },
+        { name: 'Fish-Man', power: 20 },
+        { name: 'Mink', power: 22 },
+        { name: 'Lunarian', power: 34 },
+        { name: 'Giant', power: 28 },
+        { name: 'Skypiean', power: 12 },
+        { name: 'Cyborg', power: 24 },
+        { name: 'Three-Eye Tribe', power: 16 },
+        { name: 'Demon', power: 36 }
+      ],
+      origin: [
+        { name: 'East Blue', power: 6 },
+        { name: 'North Blue', power: 9 },
+        { name: 'West Blue', power: 9 },
+        { name: 'South Blue', power: 9 },
+        { name: 'Grand Line', power: 16 },
+        { name: 'New World', power: 24 },
+        { name: 'Red Line', power: 18 },
+        { name: 'Mariejois', power: 20 },
+        { name: 'Piekielna Otchłań', power: 30 }
+      ],
+      job: [
+        { name: 'Pirate', power: 16 },
+        { name: 'Marine', power: 18 },
+        { name: 'Bounty Hunter', power: 17 }
+      ],
+      faction: [
+        { name: 'Independent', power: 8 },
+        { name: 'Straw Hat Style Crew', power: 16 },
+        { name: 'Revolutionary Army', power: 22 },
+        { name: 'Marines', power: 20 },
+        { name: 'CP Division', power: 24 },
+        { name: 'Warlord Legacy', power: 26 },
+        { name: 'Yonko Fleet', power: 30 },
+        { name: 'Underworld Emperor', power: 34 }
+      ],
+      weapon: [
+        { name: 'Brak', power: 0 },
+        { name: 'Sword', power: 18 },
+        { name: 'Dual Swords', power: 24 },
+        { name: 'Katana', power: 20 },
+        { name: 'Spear', power: 16 },
+        { name: 'Gun', power: 12 },
+        { name: 'Hammer', power: 14 },
+        { name: 'Staff', power: 15 },
+        { name: 'Scythe', power: 19 },
+        { name: 'Claws', power: 17 }
+      ],
+      fightingStyle: [
+        { name: 'Basic Combat', power: 8 },
+        { name: 'Rokushiki', power: 25 },
+        { name: 'Fish-Man Karate', power: 24 },
+        { name: 'Black Leg Style', power: 22 },
+        { name: 'Swordsmanship', power: 20 },
+        { name: 'Sniper Tactics', power: 15 },
+        { name: 'El
